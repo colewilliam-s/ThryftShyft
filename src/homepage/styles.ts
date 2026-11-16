@@ -55,6 +55,9 @@ export const styles = StyleSheet.create({
     backgroundColor: '#efefef',
     borderRadius: 6, // placeholder: slight rounding
     overflow: 'hidden',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'rgb(53, 53, 48)'
   },
   soldOverlay: {
     // placeholder: dim the whole photo and center "SOLD"

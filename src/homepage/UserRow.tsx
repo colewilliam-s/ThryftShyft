@@ -40,6 +40,7 @@ export function UserRow({ profile }: { profile: FeedProfile }) {
           />
         ))}
         {hasMore ? <MoreTile size={tileSize} onPress={openProfile} /> : null}
+        {hasMore ? null : <MoreTile size={tileSize} onPress={openProfile}/>}
       </View>
     </View>
   );
