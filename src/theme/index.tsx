@@ -22,6 +22,8 @@ export const lightColors = {
 	bubbleMine: '#2f6fed',
 	bubbleTheirs: '#e6e6e6',
 	bubbleTheirsText: '#000000',
+	borderStrong: 'rgb(53, 53, 48)',
+	buttonSecondary: '#c0bdc1'
 };
 
 export type Colors = typeof lightColors;
@@ -39,6 +41,8 @@ export const darkColors: Colors = {
 	bubbleMine: '#2f6fed',
 	bubbleTheirs: '#2e2e2e',
 	bubbleTheirsText: '#f2f2f2',
+	borderStrong: '#5a5a55',
+	buttonSecondary: '#3a3a3a'
 };
 
 export function useTheme() {

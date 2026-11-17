@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FlatList, View, Text, ActivityIndicator } from 'react-native';
-import { styles } from '../../src/homepage/styles';
+import { useStyles } from '../../src/homepage/styles';
 import { fetchFeed } from '../../src/homepage/feed';
 import type { FeedProfile } from '../../src/types';
 import { UserRow } from '../../src/homepage/UserRow';
@@ -13,6 +13,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
+  const styles = useStyles();
 
   async function load() {
     setError('');
