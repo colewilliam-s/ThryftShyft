@@ -86,9 +86,14 @@ export function ProfileView({ userId, isOwn }: Props) {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       {/*temporary settings access. Should eventually go in layout.tsx as a header*/}
-        <Pressable onPress={() => router.replace('/settings')}>
-          <Text style={styles.linkText}>Settings</Text>
+      {isOwn ? (
+        <Pressable 
+          onPress={() => router.replace('/settings')}
+          style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
+        >
+          <Text style={styles.secondaryButtonText}>Settings</Text>
         </Pressable>
+      ) : null}
 
       {isOwn ? (
         <Pressable
@@ -120,7 +125,7 @@ export function ProfileView({ userId, isOwn }: Props) {
         </Pressable>
       ) : null
 
-        
+
       }
     </View>
   );

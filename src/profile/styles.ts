@@ -116,8 +116,9 @@ export const styles = StyleSheet.create({
     color: '#6b6b6b',
     textAlign: 'center',
     textDecorationLine: 'underline',
-    marginTop: 24,
+    marginTop: 44,
     fontFamily: 'DMSans_400Regular',
+    fontSize: 19
   },
   pressed: {
     opacity: 0.7,
