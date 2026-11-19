@@ -5,13 +5,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../src/supabase';
 import { ProfileForm } from '../src/profile/ProfileForm';
 import { styles } from '../src/profile/styles';
+import { useRouter } from 'expo-router';
+
 
 export default function SetupProfile() {
+  const router = useRouter();
   return (
     // this screen has no header, so keep it clear of the notch and home bar
     <SafeAreaView style={styles.container}>
-      {/* After saving, app/_layout.tsx sees the finished profile and moves on to the feed */}
-      <ProfileForm title='Create your profile' saveLabel='Continue' onSaved={() => {}} />
+
+      {/* Now after saving, routes to location setup page */}
+      <ProfileForm title='Create your profile' saveLabel='Continue' onSaved={() => router.replace('../src/profile/SetupLocation')} />  
 
       {/* a way out in case the wrong account is logged in */}
       <Pressable onPress={() => supabase.auth.signOut()} hitSlop={8} style={styles.setupLogout}>

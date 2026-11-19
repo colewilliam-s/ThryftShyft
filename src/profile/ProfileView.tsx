@@ -85,6 +85,11 @@ export function ProfileView({ userId, isOwn }: Props) {
       {profile.major ? <Text style={styles.detail}>{profile.major}</Text> : null}
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
+      {/*temporary settings access. Should eventually go in layout.tsx as a header*/}
+        <Pressable onPress={() => router.replace('/settings')}>
+          <Text style={styles.linkText}>Settings</Text>
+        </Pressable>
+
       {isOwn ? (
         <Pressable
           style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
@@ -113,7 +118,10 @@ export function ProfileView({ userId, isOwn }: Props) {
         >
           <Text style={styles.primaryButtonText}>Post your first item</Text>
         </Pressable>
-      ) : null}
+      ) : null
+
+        
+      }
     </View>
   );
 
