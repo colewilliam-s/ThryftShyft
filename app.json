@@ -35,14 +35,19 @@
         }
       ],
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to show how far away listings are."
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": {
             "enableSceneSupport": true
           }
         }
-      ],
-      "expo-status-bar"
+      ]
     ]
   }
 }
