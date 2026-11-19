@@ -206,6 +206,7 @@ export function LocationForm({ mode, onDone }: Props) {
   return (
     <ScrollView
       style={styles.container}
+      contentInsetAdjustmentBehavior='automatic'
       contentContainerStyle={styles.formContent}
       keyboardShouldPersistTaps='handled'
     >

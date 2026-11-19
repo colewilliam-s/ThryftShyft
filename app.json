@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/thryftshyft_logo.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.colewilliam-s.clothing-resale",
@@ -35,14 +35,19 @@
         }
       ],
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to show how far away listings are."
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": {
             "enableSceneSupport": true
           }
         }
-      ],
-      "expo-status-bar"
+      ]
     ]
   }
 }

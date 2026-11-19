@@ -177,7 +177,7 @@ export const useStyles = makeStyles((style) => ({
     justifyContent: 'center',
   },
   soldText: {
-    color: '#fff', 
+    color: '#fff',
     fontSize: 12,
     letterSpacing: 1,
     fontFamily: 'DMSans_700Bold',
