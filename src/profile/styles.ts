@@ -200,5 +200,67 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
+  },
+
+  // set location form
+  // Chips (category, condition, On/Off campus, visibility)
+  chip: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#d0d0d0',
+    backgroundColor: '#fff',
+    color: '#333',
+    fontSize: 14,
+    overflow: 'hidden', // lets borderRadius apply to Text on iOS
+  },
+  chipSelected: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#111',
+    backgroundColor: '#111',
+    color: '#fff',
+    fontSize: 14,
+    overflow: 'hidden',
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+
+  // Campus spot dropdown
+  dropdown: {
+    borderWidth: 1,
+    borderColor: '#d0d0d0',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff',
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#111',
+  },
+  dropdownList: {
+    borderWidth: 1,
+    borderColor: '#d0d0d0',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+  },
+  dropdownOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#e5e5e5',
+  },
+  dropdownOptionText: {
+    fontSize: 15,
+    color: '#111',
   }
+  
 });

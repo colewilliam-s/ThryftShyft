@@ -10,6 +10,7 @@ import { Avatar } from './Avatar';
 import { styles } from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+
 type Props = {
   title?: string; // shown at the top during setup; edit mode uses the screen header instead
   saveLabel: string;
