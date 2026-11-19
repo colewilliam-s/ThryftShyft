@@ -30,6 +30,8 @@ export const styles = StyleSheet.create({
   // Avatar: blank grey circle when there's no photo
   avatar: {
     backgroundColor: '#e5e5e5',
+    borderStyle: 'solid',
+    borderWidth: 3
   },
 
   // Profile header
@@ -68,6 +70,10 @@ export const styles = StyleSheet.create({
   },
   gridItem: {
     marginBottom: GRID_GAP,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: 'rgb(53, 53, 48)'
   },
   empty: {
     alignItems: 'center',
@@ -200,6 +206,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
+    opacity: .5,
+    width: '35%'
   },
 
   // set location form

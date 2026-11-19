@@ -10,7 +10,7 @@ import { label } from '../src/label';
 import { Redirect, useRouter, useLocalSearchParams } from 'expo-router';
 import type { Profile, Message } from '../src/types';
 import { supabase } from '../src/supabase';
-import { styles } from '../src/homepage/styles';
+import { useStyles } from '../src/homepage/styles';
 import { loadCachedMessages, saveCachedMessages, mergeMessages } from '../src/messages/cache';
 
 export default function DM() {
@@ -22,6 +22,7 @@ export default function DM() {
   const [text, setText] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const styles = useStyles();
 
   // load the signed-in user
   useEffect(() => {

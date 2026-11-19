@@ -32,7 +32,7 @@ export function ProfileView({ userId, isOwn }: Props) {
   const [profile, setProfile] = useState<ProfilePageData | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
-
+  const BORDER = 1;
   const tileSize = (width - SIDE_PADDING * 2 - GRID_GAP * (GRID_COLUMNS - 1)) / GRID_COLUMNS;
 
   const load = useCallback(async () => {
@@ -53,7 +53,7 @@ export function ProfileView({ userId, isOwn }: Props) {
     }, [load]),
   );
 
-  useEffect(() =>{
+  useEffect(() => {
     if (isOwn) load();
   }, [isOwn, load]);
 
@@ -102,7 +102,7 @@ export function ProfileView({ userId, isOwn }: Props) {
           style={({ pressed }) => [styles.chatButton, pressed && styles.pressed]}
           onPress={() => router.push({ pathname: '/dm', params: { otherId: userId } })}
         >
-          <Ionicons name="chatbubble-outline" size={20} />
+          <Ionicons name="chatbubble-outline" size={25} />
         </Pressable>
       )}
     </View>
@@ -142,8 +142,12 @@ export function ProfileView({ userId, isOwn }: Props) {
       keyExtractor={(l) => l.id}
       numColumns={GRID_COLUMNS}
       renderItem={({ item }) => (
-        <View style={styles.gridItem}>
-          <ItemThumbnail listing={item} size={tileSize} onPress={() => router.push(`/item/${item.id}`)} />
+        <View style={[styles.gridItem, { width: tileSize }]}>
+          <ItemThumbnail
+            listing={item}
+            size={tileSize - BORDER * 2}
+            onPress={() => router.push(`/item/${item.id}`)}
+          />
         </View>
       )}
       ListHeaderComponent={header}
