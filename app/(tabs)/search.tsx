@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Avatar } from '../../src/profile/Avatar';
 import { searchProfiles, type SearchProfile } from '../../src/search/api';
 import { styles, useStyles } from '../../src/search/styles';
+import { useTheme } from '../../src/theme';
 
 export default function SearchScreen() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const style = useStyles();
+  const { colors } = useTheme();
 
   // Search 300ms after the user stops typing. The cleanup ignores stale responses.
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function SearchScreen() {
       <TextInput
         style={style.input}
         placeholder='Search users (@john_smith)'
+        placeholderTextColor={colors.placeHolderTextColor}
         value={query}
         onChangeText={setQuery}
         autoCapitalize='none'

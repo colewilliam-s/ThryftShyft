@@ -6,22 +6,13 @@ import { useTheme } from '../../src/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
-/*
-  i tried finding a solution for the color component of the icon element for about an hour,
-  and found absolutely nothing. i know it says it's an error, but the app still compiles
-  while functioning perfectly fine. i think this is just a typescript issue, but if it does
-  cause problems in the future, hopefully there will be a fix for it at that point
-
-  it's really annoying me, so if anyone has a reason for why this is the way it is,
-  please tell me (cole) so i can get rid of it. it's itching my brain the wrong way
-*/
 const icon =
   (active: IconName, inactive: IconName) =>
     ({ focused, color }: { focused: boolean; color: ColorValue }) => (
       <Ionicons
         name={focused ? active : inactive}
         size={24}
-        color={color}
+        color={color as string}
       />
     );
 
