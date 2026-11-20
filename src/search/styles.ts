@@ -1,21 +1,22 @@
 import { StyleSheet } from 'react-native';
+import { makeStyles } from '../theme';
 
 export const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingHorizontal: 16,
-        paddingTop: 12
-    },
-    input: {
-        height: 44,
-        borderWidth: 1,
-        borderColor: '#e5e5e5',
-        borderRadius: 24,
-        paddingHorizontal: 12,
-        fontSize: 16,
-        fontFamily: 'DMSans_400Regular',
-    },
+    // container: {
+    //     flex: 1,
+    //     backgroundColor: '#fff',
+    //     paddingHorizontal: 16,
+    //     paddingTop: 12
+    // },
+    // input: {
+    //     height: 44,
+    //     borderWidth: 1,
+    //     borderColor: '#e5e5e5',
+    //     borderRadius: 24,
+    //     paddingHorizontal: 12,
+    //     fontSize: 16,
+    //     fontFamily: 'DMSans_400Regular',
+    // },
     spinner: {
         marginTop: 12
     },
@@ -50,4 +51,28 @@ export const styles = StyleSheet.create({
         marginTop: 40,
         fontFamily: 'DMSans_400Regular'
     },
-})
+});
+
+export const useStyles = makeStyles((style) => ({
+    container: {
+        flex: 1,
+        backgroundColor: style.background,
+        paddingHorizontal: 16,
+        paddingTop: 12
+    },
+    input: {
+        height: 44,
+        borderWidth: 1,
+        borderColor: style.inputBorder,
+        borderRadius: 24,
+        paddingHorizontal: 12,
+        fontSize: 16,
+        fontFamily: 'DMSans_400Regular',
+        color: style.text
+    },
+    name: {
+        fontSize: 15,
+        color: style.text,
+        fontFamily: 'DMSans_500Medium'
+    },
+}))

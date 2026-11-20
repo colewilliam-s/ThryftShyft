@@ -149,8 +149,8 @@ export const useStyles = makeStyles((style) => ({
   },
   name: {
     fontSize: 15,
-    color: style.text,
     fontFamily: 'DMSans_500Medium',
+    color: style.text
   },
   tiles: {
     flexDirection: 'row',
@@ -217,5 +217,109 @@ export const useStyles = makeStyles((style) => ({
     borderRadius: 8,
     width: '15%',
     margin: 3,
+  },
+
+  // dm screen
+  dm_screen: {
+    flex: 1,
+    backgroundColor: style.background,
+  },
+
+  dm_header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 12,
+    marginTop: '10%',
+    backgroundColor: style.background,
+  },
+
+  dm_title: {
+    color: style.text,
+    fontSize: 18,
+    fontFamily: 'DMSans_500Medium',
+  },
+
+  dm_backButton: {
+    backgroundColor: style.buttonSecondary,
+    paddingVertical: 10,
+    borderRadius: 8,
+    width: '18%',
+    margin: 3,
+  },
+
+  dm_backButtonText: {
+    textAlign: 'center',
+    fontWeight: '800',
+    color: style.text,
+  },
+
+  dm_error: {
+    color: style.danger,
+    paddingHorizontal: 12,
+    marginTop: 8,
+  },
+
+  dm_listContent: {
+    padding: 12,
+  },
+
+  dm_bubbleMine: {
+    alignSelf: 'flex-end',
+    maxWidth: '80%',
+    marginVertical: 3,
+    padding: 10,
+    borderRadius: 12,
+    backgroundColor: style.bubbleMine,
+  },
+
+  dm_bubbleTheirs: {
+    alignSelf: 'flex-start',
+    maxWidth: '80%',
+    marginVertical: 3,
+    padding: 10,
+    borderRadius: 12,
+    backgroundColor: style.bubbleTheirs,
+  },
+
+  dm_bubbleMineText: {
+    color: '#ffffff',
+  },
+
+  dm_bubbleTheirsText: {
+    color: style.bubbleTheirsText,
+  },
+
+  dm_inputRow: {
+    flexDirection: 'row',
+    padding: 8,
+    gap: 8,
+    width: '94%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  dm_input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: style.inputBorder,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    color: style.text,
+    backgroundColor: style.surface,
+  },
+
+  dm_sendButton: {
+    backgroundColor: style.buttonSecondary,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+
+  dm_sendText: {
+    color: style.text,
+    fontWeight: '700',
   },
 }));

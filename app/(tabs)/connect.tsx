@@ -5,7 +5,7 @@ import { supabase } from '../../src/supabase';
 import { Avatar } from '../../src/profile/Avatar';
 import { useSession } from '../../src/session/SessionProvider';
 import { fetchInbox, type InboxItem } from '../../src/messages/api';
-import { styles } from '../../src/messages/styles'
+import { styles, useStyles } from '../../src/messages/styles'
 
 export default function Connect() {
   const router = useRouter();
@@ -15,6 +15,7 @@ export default function Connect() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
+  const style = useStyles();
 
   const load = useCallback(async () => {
     if (!myId) return;
@@ -59,7 +60,7 @@ export default function Connect() {
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View style={style.center}>
         <ActivityIndicator />
       </View>
     );
@@ -67,7 +68,7 @@ export default function Connect() {
 
   return (
     <FlatList
-      style={styles.container}
+      style={style.container}
       contentContainerStyle={styles.content}
       data={chats}
       keyExtractor={(c) => c.id}
@@ -85,7 +86,7 @@ export default function Connect() {
           >
             <Avatar uri={item.other?.avatar_url ?? null} size={48} />
             <View style={styles.rowText}>
-              <Text style={styles.name}>@{item.other?.display_name?.toLowerCase() ?? 'unknown'}</Text>
+              <Text style={style.name}>@{item.other?.display_name?.toLowerCase() ?? 'unknown'}</Text>
               <Text style={styles.preview} numberOfLines={1}>{preview}</Text>
             </View>
           </Pressable>

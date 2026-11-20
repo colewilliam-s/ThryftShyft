@@ -12,6 +12,7 @@ import {
 import { supabase } from '../src/supabase';
 import { SessionProvider, useSession } from '../src/session/SessionProvider';
 import { isProfileComplete } from '../src/profile/api';
+import { useTheme } from '../src/theme';
 
 // Keep the splash screen up until fonts are ready and we know who is logged in
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +26,7 @@ const LOGGED_OUT_SCREENS = ['index', 'signup', 'resetPassword'];
 // Screens anyone can be on. A password reset link logs the user in,
 // so update-password must not redirect them before they finish.
 const OPEN_SCREENS = ['update-password'];
+
 
 type Route = '/' | '/setup-profile' | 'homepage';
 
@@ -70,9 +72,11 @@ export default function Layout() {
   );
 }
 
+const { colors } = useTheme();
 // Sends people to the right place: login when logged out, profile setup when
 // their profile isn't finished, and the app once it is.
 function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
+  // const { colors } = useTheme();
   const { session, profile, initialized, loading } = useSession();
   const segments = useSegments() as string[];
   const router = useRouter();
@@ -112,7 +116,15 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
   return (
     <>
       {initialized ? (
-        <Stack screenOptions={{ animation: 'none', headerShown: false }}>
+        <Stack
+          screenOptions={{
+            animation: 'none',
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.background },
+            headerStyle: { backgroundColor: colors.background },
+            headerTintColor: colors.text,                 // back arrow and button text
+            headerTitleStyle: { color: colors.text },
+          }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen
             name="user/[id]"
@@ -121,6 +133,20 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
               title: '',
               headerBackTitle: 'Back',
               animation: 'slide_from_right',
+              headerStyle: { backgroundColor: colors.background },
+              headerTintColor: colors.text
+            }}
+          />
+          <Stack.Screen
+            name="settings"
+            options={{
+              headerShown: true,
+              title: 'Settings',
+              headerBackTitle: 'Back',
+              animation: 'slide_from_right',
+              headerStyle: { backgroundColor: colors.background },
+              headerTintColor: colors.text,
+              headerTitleStyle: { color: colors.text },
             }}
           />
         </Stack>
@@ -141,7 +167,7 @@ const cover = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -3,10 +3,11 @@
 //   mode='settings' -> the Location section of your settings screen
 
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, AppState, Linking, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, AppState, Linking, Pressable, ScrollView, View } from 'react-native';
 import * as Location from 'expo-location';
 import { useSession } from '../session/SessionProvider';
-import { styles } from './styles';
+import { useStyles } from './styles';
+import { Text, useTheme } from '../theme';
 
 import { confirm } from './ConfirmPopup'; 
 import { fetchMyLocation, fetchCampusSpots, saveMyLocation, clearMyLocation, markLocationPrompted, type CampusSpot, type MyLocation,} from './LocationApi'; 
@@ -36,6 +37,8 @@ async function readPermission(): Promise<Perm> {
 }
 
 export function LocationForm({ mode, onDone }: Props) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { session, profile, refreshProfile } = useSession();
   const userId = session?.user.id;
   const domain = profile?.university_domain ?? null;
@@ -182,7 +185,7 @@ export function LocationForm({ mode, onDone }: Props) {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator />
+        <ActivityIndicator color={colors.textMuted} />
       </View>
     );
   }

@@ -3,7 +3,7 @@
 
 import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import { styles } from './styles';
+import { styles, useStyles } from './styles';
 import { label } from '../label';
 import { ROW_SLOTS } from './feed';
 import { ItemThumbnail, MoreTile } from './ItemThumbnail';
@@ -15,6 +15,7 @@ const TILE_GAP = 8; // matches gap in styles.tiles
 export function UserRow({ profile }: { profile: FeedProfile }) {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const style = useStyles()
 
   // Square tiles sized so 5 slots exactly fill the screen width
   const tileSize = (width - SIDE_PADDING * 2 - TILE_GAP * (ROW_SLOTS - 1)) / ROW_SLOTS;
@@ -28,9 +29,9 @@ export function UserRow({ profile }: { profile: FeedProfile }) {
   return (
     <View style={styles.row}>
       <Pressable onPress={openProfile} hitSlop={8} style={styles.nameWrap}>
-        <Text style={styles.name}>{label(profile)}</Text>
+        <Text style={style.name}>{label(profile)}</Text>
       </Pressable>
-      <View style={styles.tiles}>
+      <View style={style.tiles}>
         {visible.map((listing) => (
           <ItemThumbnail
             key={listing.id}

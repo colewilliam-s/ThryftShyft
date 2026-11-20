@@ -2,13 +2,14 @@
 // and for editing later (app/edit-profile.tsx).
 
 import { useEffect, useState } from 'react';
-import { ScrollView, View, Text, TextInput, Pressable, Switch, ActivityIndicator } from 'react-native';
+import { ScrollView, View, TextInput, Pressable, Switch, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSession } from '../session/SessionProvider';
 import { fetchMyNames, saveProfile, type PhotoChange } from './api';
 import { Avatar } from './Avatar';
-import { styles } from './styles';
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useStyles } from './styles';
+import { Text, useTheme } from '../theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 type Props = {
@@ -20,6 +21,8 @@ type Props = {
 const thisYear = new Date().getFullYear();
 
 export function ProfileForm({ title, saveLabel, onSaved }: Props) {
+  const styles = useStyles();
+  const { colors, isDark } = useTheme();
   const { session, profile, refreshProfile } = useSession();
   const userId = session?.user.id;
 
@@ -100,11 +103,11 @@ export function ProfileForm({ title, saveLabel, onSaved }: Props) {
   if (loadingNames) {
     return (
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: '#fff' }} 
+        style={{ flex: 1, backgroundColor: colors.background }}
         edges={['top']}
       >
         <View style={styles.center}>
-          <ActivityIndicator />
+          <ActivityIndicator color={colors.textMuted} />
         </View>
       </SafeAreaView>
     );
@@ -112,9 +115,9 @@ export function ProfileForm({ title, saveLabel, onSaved }: Props) {
 
   return (
     <SafeAreaView
-        style={{ flex: 1, backgroundColor: '#fff' }} 
-        edges={['top']}
-      >
+      style={{ flex: 1, backgroundColor: colors.background }}
+      edges={['top']}
+    >
       <ScrollView
         style={styles.container}
         contentInsetAdjustmentBehavior='automatic'
@@ -153,6 +156,7 @@ export function ProfileForm({ title, saveLabel, onSaved }: Props) {
           value={classYear}
           onChangeText={setClassYear}
           placeholder={String(thisYear + 2)}
+          placeholderTextColor={colors.textMuted}
           keyboardType='number-pad'
           maxLength={4}
         />
@@ -186,7 +190,11 @@ export function ProfileForm({ title, saveLabel, onSaved }: Props) {
 
         <View style={styles.switchRow}>
           <Text style={styles.switchLabel}>Show my full name on my profile</Text>
-          <Switch value={showFullName} onValueChange={setShowFullName} />
+          <Switch 
+            value={showFullName} 
+            onValueChange={setShowFullName}
+            trackColor={{ false: colors.border, true: colors.primary}}
+          />
         </View>
         <Text style={styles.hint}>If this is off, only you can see your first and last name.</Text>
 

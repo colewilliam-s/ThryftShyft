@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { ScrollView, View, Text, TextInput, Pressable, Image, Alert } from 'react-native';
+import { ScrollView, View, TextInput, Pressable, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSession } from '../session/SessionProvider';
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { type PhotoChange } from '../profile/api';
-import { createListing, updateListing } from '../listing/update_createListings'
-import { type Listing } from '../types'
-// i created a styles file in the same directory just to get rid of the errors. further explained in the actual file
-import { styles } from '../listing/styles';
+import { createListing, updateListing } from '../listing/update_createListings';
+import { type Listing } from '../types';
+import { useStyles } from '../listing/styles';
+import { Text, useTheme } from '../theme';
 
 type Props = {
   existing?: Listing;
@@ -16,18 +16,16 @@ type Props = {
   onSaved: () => void;
 };
 
-//const MAX_PHOTOS = 6;
-
-// Maybe get a larger more relatable list of categories from database and make a drop down
 const CATEGORIES = ['Tops', 'Bottoms', 'Outerwear', 'Shoes', 'Accessories', 'Jewelry', 'Other'];
-const CONDITIONS = ['New with tags', 'Like new', 'Good', 'Fair','Busted', 'Mended', 'Upcycled'];
+const CONDITIONS = ['New with tags', 'Like new', 'Good', 'Fair', 'Busted', 'Mended', 'Upcycled'];
 
 export function ListingForm({ existing, saveLabel, onSaved }: Props) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { session } = useSession();
   const userId = session?.user.id;
-  //const isEditing = !!existing; not sure if needed yet
 
-  const [photoUri, setPhotoUri] = useState<string | null>(existing?.image_url ?? null);     //db uses image_url
+  const [photoUri, setPhotoUri] = useState<string | null>(existing?.image_url ?? null);
   const [photoChange, setPhotoChange] = useState<PhotoChange>({ kind: 'keep' });
   const [title, setTitle] = useState(existing?.title ?? '');
   const [description, setDescription] = useState(existing?.description ?? '');
@@ -58,7 +56,7 @@ export function ListingForm({ existing, saveLabel, onSaved }: Props) {
     setPhotoUri(null);
     setPhotoChange({ kind: 'remove' });
   }
-  
+
   async function handleSave() {
     setError('');
     const priceNumber = Number(price);
@@ -71,16 +69,6 @@ export function ListingForm({ existing, saveLabel, onSaved }: Props) {
     if (!condition) return setError('Please choose a condition.');
     if (!userId) return;
 
-    setPhotoUri('');
-    setTitle('');
-    setDescription('');
-    setPrice('');
-    setSize('');
-    setCondition('');
-    setBrand('');
-    setColor('');
-
-
     const fields = {
       title, description, price: priceNumber, category, size, condition, brand, color,
     };
@@ -91,6 +79,19 @@ export function ListingForm({ existing, saveLabel, onSaved }: Props) {
         await updateListing(existing.id, fields, photoChange, existing.image_url ?? null);
       } else {
         await createListing(userId, fields, photoChange);
+
+        // Clear the form and confirm only after the listing really saved
+        setPhotoUri(null);
+        setPhotoChange({ kind: 'keep' });
+        setTitle('');
+        setDescription('');
+        setPrice('');
+        setCategory('');
+        setSize('');
+        setCondition('');
+        setBrand('');
+        setColor('');
+        Alert.alert('Listing Created!', 'Go take a look on the homepage or your profile to check it out!');
       }
       onSaved();
     } catch (e) {
@@ -98,16 +99,10 @@ export function ListingForm({ existing, saveLabel, onSaved }: Props) {
     } finally {
       setSaving(false);
     }
-
-    Alert.alert("Listing Created!", "Go take a look on the homepage or your profile to check it out!");
   }
 
-
   return (
-    <SafeAreaView
-            style={{ flex: 1, backgroundColor: '#fff' }} 
-            edges={['top']}
-      >
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <ScrollView
         style={styles.container}
         contentInsetAdjustmentBehavior='automatic'
@@ -181,8 +176,6 @@ export function ListingForm({ existing, saveLabel, onSaved }: Props) {
         <Text style={styles.label}>Color (optional)</Text>
         <TextInput style={styles.input} value={color} onChangeText={setColor} maxLength={30} />
 
-        {/* TODO: add new questions here */}
-
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <Pressable
@@ -192,7 +185,7 @@ export function ListingForm({ existing, saveLabel, onSaved }: Props) {
         >
           <Text style={styles.primaryButtonText}>{saving ? 'Saving...' : saveLabel}</Text>
         </Pressable>
-      </ScrollView>    
+      </ScrollView>
     </SafeAreaView>
   );
 }

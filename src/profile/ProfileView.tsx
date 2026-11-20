@@ -2,31 +2,26 @@
 // Used for your own Profile tab and for other users' pages (app/user/[id].tsx).
 
 import { useCallback, useState, useEffect } from 'react';
-import { FlatList, View, Text, Pressable, ActivityIndicator, useWindowDimensions, ColorValue } from 'react-native';
+import { FlatList, View, Pressable, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { supabase } from '../supabase';
 import { ItemThumbnail } from '../homepage/ItemThumbnail';
 import { fetchProfilePage } from './api';
 import { Avatar } from './Avatar';
-import { styles, GRID_COLUMNS, GRID_GAP, SIDE_PADDING } from './styles';
+import { useStyles, GRID_COLUMNS, GRID_GAP, SIDE_PADDING } from './styles';
 import type { ProfilePageData } from '../types';
 import { Ionicons } from '@expo/vector-icons';
-import { realTimeListing } from '../listing/realTimeListing'
-
-type IconName = keyof typeof Ionicons.glyphMap;
+import { realTimeListing } from '../listing/realTimeListing';
+import { Text, useTheme } from '../theme';
 
 type Props = {
   userId: string;
   isOwn: boolean; // your own profile shows Edit Profile, Log Out, and the post-your-first-item button
 };
 
-const icon =
-  (active: IconName, inactive: IconName) =>
-    ({ focused, color, size }: { focused: boolean; color: ColorValue; size: number }) => (
-      <Ionicons name={focused ? active : inactive} size={size} ColorValue={color} />
-    );
-
 export function ProfileView({ userId, isOwn }: Props) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [profile, setProfile] = useState<ProfilePageData | null>(null);
@@ -66,7 +61,7 @@ export function ProfileView({ userId, isOwn }: Props) {
   if (!profile) {
     return (
       <View style={styles.center}>
-        {error ? <Text style={styles.error}>{error}</Text> : <ActivityIndicator />}
+        {error ? <Text style={styles.error}>{error}</Text> : <ActivityIndicator color={colors.textMuted} />}
       </View>
     );
   }
@@ -85,10 +80,10 @@ export function ProfileView({ userId, isOwn }: Props) {
       {profile.major ? <Text style={styles.detail}>{profile.major}</Text> : null}
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      {/*temporary settings access. Should eventually go in layout.tsx as a header*/}
+      {/* temporary settings access. Should eventually go in the layout as a header */}
       {isOwn ? (
-        <Pressable 
-          onPress={() => router.replace('/settings')}
+        <Pressable
+          onPress={() => router.push('/settings')}
           style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
         >
           <Text style={styles.secondaryButtonText}>Settings</Text>
@@ -107,7 +102,7 @@ export function ProfileView({ userId, isOwn }: Props) {
           style={({ pressed }) => [styles.chatButton, pressed && styles.pressed]}
           onPress={() => router.push({ pathname: '/dm', params: { otherId: userId } })}
         >
-          <Ionicons name="chatbubble-outline" size={25} />
+          <Ionicons name="chatbubble-outline" size={25} color={colors.text} />
         </Pressable>
       )}
     </View>
@@ -123,10 +118,7 @@ export function ProfileView({ userId, isOwn }: Props) {
         >
           <Text style={styles.primaryButtonText}>Post your first item</Text>
         </Pressable>
-      ) : null
-
-
-      }
+      ) : null}
     </View>
   );
 
