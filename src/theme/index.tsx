@@ -12,6 +12,11 @@ import {
 
 export const lightColors = {
 	background: '#ffffff',
+	iconColor: '#111',
+	borderTopColor: '#e5e5e5',
+	tabBackgroundColor: '#000',
+	tabBarActiveTintColor: '#111',
+    tabBarInactiveTintColor: '#9a9a9a',
 	surface: '#efefef',      // thumbnails, cards
 	text: '#111111',
 	textMuted: '#6b6b6b',
@@ -23,14 +28,20 @@ export const lightColors = {
 	bubbleTheirs: '#e6e6e6',
 	bubbleTheirsText: '#000000',
 	borderStrong: 'rgb(53, 53, 48)',
-	buttonSecondary: '#c0bdc1'
+	buttonSecondary: '#c0bdc1',
+	inputBorder: '#e5e5e5'
 };
 
 export type Colors = typeof lightColors;
 type Style = ViewStyle | TextStyle | ImageStyle;
 
 export const darkColors: Colors = {
-	background: '#121212',
+	background: '#151515',
+	iconColor: '#ffffff',
+	borderTopColor: '#312f2f',
+	tabBackgroundColor: '#000',
+	tabBarActiveTintColor: '#e5e5e5',
+    tabBarInactiveTintColor: '#8b8a8a',
 	surface: '#2a2a2a',
 	text: '#f2f2f2',
 	textMuted: '#a0a0a0',
@@ -42,7 +53,8 @@ export const darkColors: Colors = {
 	bubbleTheirs: '#2e2e2e',
 	bubbleTheirsText: '#f2f2f2',
 	borderStrong: '#5a5a55',
-	buttonSecondary: '#3a3a3a'
+	buttonSecondary: '#3a3a3a',
+	inputBorder: '#e9e5e5'
 };
 
 export function useTheme() {

@@ -2,25 +2,37 @@ import { Ionicons } from '@expo/vector-icons';
 import { ColorValue } from 'react-native';
 import { TopTabs } from 'expo-router/js-top-tabs';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../../src/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
+/*
+  i tried finding a solution for the color component of the icon element for about an hour,
+  and found absolutely nothing. i know it says it's an error, but the app still compiles
+  while functioning perfectly fine. i think this is just a typescript issue, but if it does
+  cause problems in the future, hopefully there will be a fix for it at that point
+
+  it's really annoying me, so if anyone has a reason for why this is the way it is,
+  please tell me (cole) so i can get rid of it. it's itching my brain the wrong way
+*/
 const icon =
   (active: IconName, inactive: IconName) =>
-  ({ focused, color }: { focused: boolean; color: ColorValue }) => (
-    <Ionicons
-      name={focused ? active : inactive}
-      size={24}
-      ColorValue={color}
-    />
-  );
+    ({ focused, color }: { focused: boolean; color: ColorValue }) => (
+      <Ionicons
+        name={focused ? active : inactive}
+        size={24}
+        color={color}
+      />
+    );
+
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: '#fff' }}
+      style={{ flex: 1, backgroundColor: colors.tabBackgroundColor }}
       edges={['top']}
     >
       <TopTabs
@@ -30,13 +42,13 @@ export default function TabLayout() {
           animationEnabled: true,
           lazy: false,
           tabBarShowIcon: true,
-          tabBarActiveTintColor: '#111',
-          tabBarInactiveTintColor: '#9a9a9a',
+          tabBarActiveTintColor: colors.tabBarActiveTintColor,
+          tabBarInactiveTintColor: colors.tabBarInactiveTintColor,
           tabBarIndicatorStyle: { height: 0 },
           tabBarStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: colors.tabBackgroundColor,
             borderTopWidth: 1,
-            borderTopColor: '#e5e5e5',
+            borderTopColor: colors.borderTopColor,
             paddingBottom: insets.bottom,
           },
           tabBarLabelStyle: {

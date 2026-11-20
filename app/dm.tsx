@@ -149,14 +149,20 @@ export default function DM() {
   // couldn't open it
   if (!convId) {
     return (
-      <View style={{ flex: 1, padding: 20, marginTop: '10%' }}>
-        <Pressable
-          onPress={() => router.back()}
-          style={({ pressed }) => [styles.textBackButton, pressed && styles.backButtonPressed]}
-        >
-          <Text style={styles.backButtonText}>&lt; Back</Text>
-        </Pressable>
-        <Text style={{ color: 'red', marginTop: 12 }}>{error}</Text>
+      <View style={styles.dm_screen}>
+        <View style={styles.dm_header}>
+          <Pressable
+            onPress={() => router.back()}
+            style={({ pressed }) => [
+              styles.dm_backButton,
+              pressed && styles.backButtonPressed,
+            ]}
+          >
+            <Text style={styles.dm_backButtonText}>Back</Text>
+          </Pressable>
+        </View>
+
+        <Text style={styles.dm_error}>{error}</Text>
       </View>
     );
   }
@@ -164,46 +170,72 @@ export default function DM() {
   // the chat
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.dm_screen}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={0}
     >
-      <View style={{ padding: 12, flexDirection: 'row', gap: 12, marginTop: '10%' }}>
+      {/* Header */}
+      <View style={styles.dm_header}>
         <Pressable
           onPress={() => router.back()}
-          style={({ pressed }) => [styles.textBackButton, pressed && styles.backButtonPressed]}
+          style={({ pressed }) => [
+            styles.dm_backButton,
+            pressed && styles.backButtonPressed,
+          ]}
         >
-          <Text style={styles.backButtonText}>&lt; Back</Text>
+          <Text style={styles.dm_backButtonText}>Back</Text>
         </Pressable>
-        <Text>{otherName}</Text>
+
+        <Text style={styles.dm_title}>{otherName}</Text>
       </View>
-      {error ? <Text style={{ color: 'red', paddingHorizontal: 12 }}>{error}</Text> : null}
+
+      {/* Error message */}
+      {error ? <Text style={styles.dm_error}>{error}</Text> : null}
+
+      {/* Messages */}
       <FlatList
         inverted
         data={messages}
         keyExtractor={(m) => m.id}
-        contentContainerStyle={{ padding: 12 }}
+        contentContainerStyle={styles.dm_listContent}
         renderItem={({ item }) => {
           const mine = item.sender_id === userId;
+
           return (
-            <View style={{
-              alignSelf: mine ? 'flex-end' : 'flex-start',
-              maxWidth: '80%', marginVertical: 3, padding: 10, borderRadius: 12,
-              backgroundColor: mine ? '#2f6fed' : '#e6e6e6',
-            }}>
-              <Text style={{ color: mine ? 'white' : 'black' }}>{item.body}</Text>
+            <View
+              style={
+                mine
+                  ? styles.dm_bubbleMine
+                  : styles.dm_bubbleTheirs
+              }
+            >
+              <Text
+                style={
+                  mine
+                    ? styles.dm_bubbleMineText
+                    : styles.dm_bubbleTheirsText
+                }
+              >
+                {item.body}
+              </Text>
             </View>
           );
         }}
       />
-      <View style={{ flexDirection: 'row', padding: 8, gap: 8, width: '94%', alignSelf: 'center' }}>
+
+      {/* Message input */}
+      <View style={styles.dm_inputRow}>
         <TextInput
-          style={{ flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 20, paddingHorizontal: 14 }}
+          style={styles.dm_input}
           value={text}
           onChangeText={setText}
-          placeholder='Message'
+          placeholder="Message"
+          placeholderTextColor={styles.dm_bubbleTheirsText.color}
         />
-        <Pressable onPress={send}><Text style={{ padding: 10, fontWeight: 700 }}>Send</Text></Pressable>
+
+        <Pressable style={styles.dm_sendButton} onPress={send}>
+          <Text style={styles.dm_sendText}>Send</Text>
+        </Pressable>
       </View>
     </KeyboardAvoidingView>
   );

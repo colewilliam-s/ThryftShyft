@@ -3,7 +3,7 @@ import { FlatList, View, Text, TextInput, Pressable, ActivityIndicator } from 'r
 import { useRouter } from 'expo-router';
 import { Avatar } from '../../src/profile/Avatar';
 import { searchProfiles, type SearchProfile } from '../../src/search/api';
-import { styles } from '../../src/search/styles';
+import { styles, useStyles } from '../../src/search/styles';
 
 export default function SearchScreen() {
   const router = useRouter();
@@ -11,6 +11,7 @@ export default function SearchScreen() {
   const [results, setResults] = useState<SearchProfile[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const style = useStyles();
 
   // Search 300ms after the user stops typing. The cleanup ignores stale responses.
   useEffect(() => {
@@ -47,9 +48,9 @@ export default function SearchScreen() {
   const hasQuery = query.trim().length > 0;
 
   return (
-    <View style={styles.container}>
+    <View style={style.container}>
       <TextInput
-        style={styles.input}
+        style={style.input}
         placeholder='Search users (@john_smith)'
         value={query}
         onChangeText={setQuery}
@@ -77,7 +78,7 @@ export default function SearchScreen() {
             >
               <Avatar uri={item.avatar_url} size={48} />
               <View style={styles.rowText}>
-                <Text style={styles.name}>@{item.display_name?.toLowerCase()}</Text>
+                <Text style={style.name}>@{item.display_name?.toLowerCase()}</Text>
                 {fullName ? <Text style={styles.detail}>{fullName}</Text> : null}
                 {item.major ? <Text style={styles.detail}>{item.major}</Text> : null}
               </View>
