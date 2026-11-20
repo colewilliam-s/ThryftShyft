@@ -72,11 +72,11 @@ export default function Layout() {
   );
 }
 
-const { colors } = useTheme();
+// const { colors } = useTheme();
 // Sends people to the right place: login when logged out, profile setup when
 // their profile isn't finished, and the app once it is.
 function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
-  // const { colors } = useTheme();
+  const { colors } = useTheme();
   const { session, profile, initialized, loading } = useSession();
   const segments = useSegments() as string[];
   const router = useRouter();
@@ -152,8 +152,8 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
         </Stack>
       ) : null}
       {covered ? (
-        <View style={cover.overlay}>
-          <ActivityIndicator size="large" />
+        <View style={[cover.overlay, { backgroundColor: colors.background}]}>
+          <ActivityIndicator size="large" color={colors.textMuted} />
         </View>
       ) : null}
     </>
@@ -167,7 +167,6 @@ const cover = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
