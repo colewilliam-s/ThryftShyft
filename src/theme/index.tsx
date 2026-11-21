@@ -33,7 +33,8 @@ export const lightColors = {
 	buttonSecondary: '#c0bdc1',
 	inputBorder: '#e5e5e5',
 	placeHolderTextColor: '#3a3535',
-	titleText: '#000'
+	titleText: '#000',
+	loginButton: '#1f8a0c'
 };
 
 export type Colors = typeof lightColors;
@@ -51,7 +52,7 @@ export const darkColors: Colors = {
 	textMuted: '#a0a0a0',
 	border: '#2e2e2e',
 	primary: '#3fb62a',
-	link: '#6d9bff',
+	link: '#406dcd',
 	danger: '#ff6b6b',
 	bubbleMine: '#2f6fed',
 	bubbleTheirs: '#2e2e2e',
@@ -62,7 +63,8 @@ export const darkColors: Colors = {
 	buttonSecondary: '#3a3a3a',
 	inputBorder: '#e9e5e5',
 	placeHolderTextColor: '#a7a0a0',
-	titleText: '#fff'
+	titleText: '#fff',
+	loginButton: '#158900'
 };
 
 export function useTheme() {

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { styles } from '../src/login_page/styles';
+import { styles, useStyles } from '../src/login_page/styles';
 import { Text, View, TextInput, ScrollView, Pressable } from 'react-native';
 import { useSession } from '../src/session/SessionProvider';
 import { Link, Stack } from 'expo-router';
 import { verify } from '../src/login_page/verification';
 import { signInWithMicrosoft } from '../src/login_page/microsoftLogin';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '../src/theme';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,8 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { session } = useSession();
+  const style = useStyles();
+  const { colors} = useTheme();
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   }
@@ -24,15 +27,16 @@ export default function LoginPage() {
     <>
       <Stack.Screen options={{ headerBackVisible: false }} />
       <ScrollView
-        style={styles.container}
+        style={style.container}
         keyboardDismissMode='on-drag'
         keyboardShouldPersistTaps='handled'
       >
-        <Text style={styles.header}>ThryftShyft</Text>
+        <Text style={style.header}>ThryftShyft</Text>
         <View style={styles.login}>
           <TextInput
-            style={styles.emailInput}
+            style={style.emailInput}
             placeholder='Email'
+            placeholderTextColor={colors.placeHolderTextColor}
             value={email}
             onChangeText={setEmail}
             keyboardType='email-address'
@@ -40,8 +44,9 @@ export default function LoginPage() {
           />
           <View style={styles.passwordWrapper}>
             <TextInput
-              style={styles.passwordInput}
+              style={style.passwordInput}
               placeholder='Password'
+              placeholderTextColor={colors.placeHolderTextColor}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -66,7 +71,7 @@ export default function LoginPage() {
         </View>
         <Pressable
           style={({ pressed }) => [
-            styles.button,
+            style.button,
             pressed && styles.buttonPressed
           ]}
           onPress={async () => {
@@ -78,7 +83,7 @@ export default function LoginPage() {
         </Pressable>
         <Pressable
           style={({ pressed }) => [
-            styles.button,
+            style.button,
             pressed && styles.buttonPressed
           ]}
           onPress={async () => {
@@ -90,13 +95,13 @@ export default function LoginPage() {
           <Text style={styles.buttonText}>Login with UVM SSO</Text>
         </Pressable>
         <Link
-          style={styles.passReset}
+          style={style.passReset}
           href='/resetPassword'
         >
           Forgot/Reset Password?
         </Link>
         <Link
-          style={styles.passReset}
+          style={style.passReset}
           href='/signup'
         >
           Sign Up

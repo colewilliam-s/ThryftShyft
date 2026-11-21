@@ -1,6 +1,7 @@
 // Styling file for the login page
 
 import { StyleSheet } from 'react-native';
+import { makeStyles } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -11,7 +12,7 @@ export const styles = StyleSheet.create({
   },
   header: {
     fontSize: 40,
-    textDecorationColor: '#000',
+    color: '#000',
     // textDecorationLine: 'underline',
     textAlign: 'center',
     marginTop: '35%',
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   passwordInput: {
     borderBlockColor: '#000',
-    textDecorationColor: '#000',
+    color: '#000',
     alignSelf: 'center',
     borderWidth: 2,
     borderRadius: 6,
@@ -48,12 +49,14 @@ export const styles = StyleSheet.create({
   caseText: {
     color: '#817d7d',
     marginBottom: '15%',
-    marginLeft: '19%'
+    marginLeft: '19%',
+    fontWeight: 800
   },
   button: {
     backgroundColor: '#1f8a0c',
     paddingVertical: 13,
     borderRadius: 8,
+    borderStyle: 'solid',
     width: '45%',
     alignSelf: 'center',
     margin: 3
@@ -90,3 +93,58 @@ export const styles = StyleSheet.create({
     width: '100%'
   },
 });
+
+export const useStyles = makeStyles((style) => ({
+  container: {
+    flex: 1,
+    backgroundColor: style.background
+  },
+  header: {
+    fontSize: 40,
+    color: style.text,
+    textAlign: 'center',
+    marginTop: '35%',
+    fontFamily: 'sans-serif-light',
+  },
+  emailInput: {
+    borderColor: style.inputBorder,
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderRadius: 6,
+    width: '65%',
+    height: 45,
+    textAlign: 'left',
+    paddingLeft: 10,
+    fontSize: 20
+  },
+  passwordInput: {
+    borderColor: style.inputBorder,
+    color: style.text,
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderRadius: 6,
+    width: '65%',
+    marginTop: '12.5%',
+    height: 45,
+    textAlign: 'left',
+    paddingLeft: 10,
+    fontSize: 20
+  },
+  button: {
+    backgroundColor: style.loginButton,
+    paddingVertical: 13,
+    borderRadius: 10,
+    borderStyle: 'solid',
+    width: '45%',
+    alignSelf: 'center',
+    margin: 3
+  },
+  passReset: {
+    color: style.link,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    marginTop: '6%',
+    fontSize: 20,
+    fontWeight: 800
+  },
+}))
