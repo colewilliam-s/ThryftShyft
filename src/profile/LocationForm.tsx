@@ -9,8 +9,8 @@ import { useSession } from '../session/SessionProvider';
 import { useStyles } from './styles';
 import { Text, useTheme } from '../theme';
 
-import { confirm } from './ConfirmPopup'; 
-import { fetchMyLocation, fetchCampusSpots, saveMyLocation, clearMyLocation, markLocationPrompted, type CampusSpot, type MyLocation,} from './LocationApi'; 
+import { confirm } from './ConfirmPopup';
+import { fetchMyLocation, fetchCampusSpots, saveMyLocation, clearMyLocation, markLocationPrompted, type CampusSpot, type MyLocation, } from './LocationApi';
 
 
 type Props = {
@@ -81,7 +81,7 @@ export function LocationForm({ mode, onDone }: Props) {
   // so a permission revoked from the phone's settings is noticed.
   useEffect(() => {
     let alive = true;
-    const check = () => readPermission().then((p) => alive && setPerm(p)).catch(() => {});
+    const check = () => readPermission().then((p) => alive && setPerm(p)).catch(() => { });
     check();
     const sub = AppState.addEventListener('change', (s) => s === 'active' && check());
     return () => {
@@ -198,9 +198,8 @@ export function LocationForm({ mode, onDone }: Props) {
   const savedSpotName = spots.find((s) => s.id === current?.spot_id)?.name;
   const summary =
     !current || current.visibility === 'off' ? 'Location sharing is off.'
-      : `Sharing with ${current.visibility === 'public' ? 'everyone' : 'your community'}: ${
-          current.source === 'device' ? 'approximate area' : savedSpotName ?? 'on campus'
-        }`;
+      : `Sharing with ${current.visibility === 'public' ? 'everyone' : 'your community'}: ${current.source === 'device' ? 'approximate area' : savedSpotName ?? 'on campus'
+      }`;
 
 
 
@@ -250,7 +249,7 @@ export function LocationForm({ mode, onDone }: Props) {
         </Pressable>
       </View>
 
-      {/* if ON campus then gives you the option to choose and specific spot/dorm building from list dropdown*/}      
+      {/* if ON campus then gives you the option to choose and specific spot/dorm building from list dropdown*/}
       {place === 'campus' ? (
         <>
           <Text style={styles.label}>Campus spot</Text>
@@ -272,11 +271,11 @@ export function LocationForm({ mode, onDone }: Props) {
         </>
       ) : null}
 
-      {/* if OFF campus then gives you the option to use location, update or notifies if blocked */}  
+      {/* if OFF campus then gives you the option to use location, update or notifies if blocked */}
       {place === 'off_campus' ? (
         <>
           <Pressable
-            style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
+            style={({ pressed }) => [styles.primaryButton, { marginTop: 16 }, pressed && styles.pressed]}
             onPress={getDeviceLocation}
             disabled={locating}
           >

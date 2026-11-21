@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { makeStyles } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -45,3 +46,23 @@ export const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
   },
 });
+
+export const useStyles = makeStyles((style) => ({
+  input: {
+    width: '100%',
+    textAlign: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    color: style.text,
+    fontSize: 18
+  },
+  buttonText: {
+    color: style.text,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 800
+  }
+}))

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../src/supabase';
-import { styles } from '../src/styling/updatePassStyles';
+import { styles, useStyles } from '../src/styling/updatePassStyles';
 
 export default function UpdatePassword() {
   // variables
@@ -10,6 +10,7 @@ export default function UpdatePassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [ready, setReady] = useState(false);
+  const style = useStyles()
 
   // supabase actions
   useEffect(() => {
@@ -64,21 +65,21 @@ export default function UpdatePassword() {
     >
       <View style={styles.div}>
         <TextInput
-          style={styles.input}
+          style={style.input}
           placeholder='New password'
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
         <TextInput
-          style={styles.input}
+          style={style.input}
           placeholder='Confirm New password'
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
         <Pressable style={styles.button} onPress={handleUpdate}>
-          <Text style={styles.buttonText}>Update password</Text>
+          <Text style={style.buttonText}>Update password</Text>
         </Pressable>
       </View>
     </ScrollView>

@@ -149,10 +149,29 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
               headerTitleStyle: { color: colors.text },
             }}
           />
+          <Stack.Screen
+            name="dm"
+            options={{
+              headerShown: true,
+              title: '',
+              headerBackTitle: 'Back',
+              animation: 'slide_from_right',
+              contentStyle: {
+                backgroundColor: colors.background,
+              },
+              headerStyle: {
+                backgroundColor: colors.background,
+              },
+              headerTintColor: colors.text,
+              headerTitleStyle: {
+                color: colors.text,
+              },
+            }}
+          />
         </Stack>
       ) : null}
       {covered ? (
-        <View style={[cover.overlay, { backgroundColor: colors.background}]}>
+        <View style={[cover.overlay, { backgroundColor: colors.background }]}>
           <ActivityIndicator size="large" color={colors.textMuted} />
         </View>
       ) : null}

@@ -34,7 +34,8 @@ export const lightColors = {
 	inputBorder: '#e5e5e5',
 	placeHolderTextColor: '#3a3535',
 	titleText: '#000',
-	loginButton: '#1f8a0c'
+	loginButton: '#1f8a0c',
+	emailConfirm: '#f2f2f2'
 };
 
 export type Colors = typeof lightColors;
@@ -64,7 +65,8 @@ export const darkColors: Colors = {
 	inputBorder: '#e9e5e5',
 	placeHolderTextColor: '#a7a0a0',
 	titleText: '#fff',
-	loginButton: '#158900'
+	loginButton: '#158900',
+	emailConfirm: '#f1eded'
 };
 
 export function useTheme() {

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { makeStyles } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -39,3 +40,28 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export const useStyles = makeStyles((style) => ({
+  text: {
+    textAlign: 'center',    // centers the text itself when it wraps to multiple lines
+    marginBottom: 16,
+    color: style.text,
+    fontSize: 20
+  },
+  input: {
+    width: '100%',
+    textAlign: 'center',    // optional: centers the typed text / placeholders
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    fontSize: 19,
+    color: style.emailConfirm
+  },
+  resetLink: {
+    color: style.text,
+    fontWeight: 800,
+    fontSize: 18
+  }
+}))

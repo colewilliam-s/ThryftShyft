@@ -7,10 +7,12 @@ import {
   KeyboardAvoidingView, Platform, ActivityIndicator
 } from 'react-native';
 import { label } from '../src/label';
-import { Redirect, useRouter, useLocalSearchParams } from 'expo-router';
+import { Redirect, Stack, useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Profile, Message } from '../src/types';
 import { supabase } from '../src/supabase';
 import { useStyles } from '../src/homepage/styles';
+import { useTheme } from '../src/theme';
 import { loadCachedMessages, saveCachedMessages, mergeMessages } from '../src/messages/cache';
 
 export default function DM() {
@@ -23,6 +25,8 @@ export default function DM() {
   const [error, setError] = useState('');
   const router = useRouter();
   const styles = useStyles();
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
 
   // load the signed-in user
   useEffect(() => {
@@ -48,62 +52,95 @@ export default function DM() {
   }, [otherId]);
 
   // load messages and subscribe to new ones when a chat is open
+  // load messages and subscribe to new ones when a chat is open
   useEffect(() => {
     if (!convId || !userId) return;
+
+    const currentConvId = convId;
+    const currentUserId = userId;
+
     let cancelled = false;
     setMessages([]);
 
-    (async () => {
-      // 1. Show what's saved on the phone right away
-      const cached = await loadCachedMessages(userId, convId);
-      if (cancelled) return;
-      if (cached.length) setMessages(cached);
-
-      // 2. Ask the database only for messages newer than the newest saved one
-      let query = supabase
-        .from("messages")
-        .select("id, sender_id, body, created_at")
-        .eq("conversation_id", convId)
-        .order("created_at", { ascending: false })
-        .limit(50);
-      if (cached.length) query = query.gt("created_at", cached[0].created_at);
-
-      const { data, error } = await query;
-      if (cancelled) return;
-      if (error) return setError(error.message);
-
-      // A full page of 50 might mean there were more, which would leave a gap
-      // in the saved copy, so in that case use the fresh page only.
-      const cachedIds = new Set(cached.map((m) => m.id));
-      setMessages((prev) => {
-        const liveOnes = prev.filter((m) => !cachedIds.has(m.id)); // arrived over realtime meanwhile
-        const base = data.length === 50 ? data : mergeMessages(cached, data);
-        return mergeMessages(base, liveOnes);
-      });
-    })();
-
     const channel = supabase
-      .channel(`chat:${convId}`)
+      .channel(`dm-${convId}-${userId}`)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
           filter: `conversation_id=eq.${convId}`,
         },
         (payload) => {
+          if (cancelled) return;
+
           const incoming = payload.new as Message;
+
           setMessages((prev) =>
-            prev.some((m) => m.id === incoming.id) ? prev : [incoming, ...prev],
+            prev.some((m) => m.id === incoming.id)
+              ? prev
+              : [incoming, ...prev],
           );
         },
-      )
-      .subscribe();
+      );
+
+    // Subscribe only after registering all listeners.
+    channel.subscribe((status) => {
+      if (status === 'CHANNEL_ERROR') {
+        if (!cancelled) {
+          setError('Unable to connect to live messages.');
+        }
+      }
+    });
+
+    async function loadMessages() {
+      const cached = await loadCachedMessages(currentUserId, currentConvId);
+      if (cancelled) return;
+
+      if (cached.length) {
+        setMessages(cached);
+      }
+
+      let query = supabase
+        .from('messages')
+        .select('id, sender_id, body, created_at')
+        .eq('conversation_id', convId)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (cached.length) {
+        query = query.gt('created_at', cached[0].created_at);
+      }
+
+      const { data, error } = await query;
+
+      if (cancelled) return;
+
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      const fresh = data ?? [];
+      const cachedIds = new Set(cached.map((m) => m.id));
+
+      setMessages((prev) => {
+        const liveOnes = prev.filter((m) => !cachedIds.has(m.id));
+        const base =
+          fresh.length === 50
+            ? fresh
+            : mergeMessages(cached, fresh);
+
+        return mergeMessages(base, liveOnes);
+      });
+    }
+
+    loadMessages();
 
     return () => {
       cancelled = true;
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
   }, [convId, userId]);
 
@@ -150,93 +187,72 @@ export default function DM() {
   if (!convId) {
     return (
       <View style={styles.dm_screen}>
-        <View style={styles.dm_header}>
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => [
-              styles.dm_backButton,
-              pressed && styles.backButtonPressed,
-            ]}
-          >
-            <Text style={styles.dm_backButtonText}>Back</Text>
-          </Pressable>
-        </View>
-
         <Text style={styles.dm_error}>{error}</Text>
       </View>
     );
   }
 
   // the chat
+  // the chat
   return (
-    <KeyboardAvoidingView
-      style={styles.dm_screen}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={0}
-    >
-      {/* Header */}
-      <View style={styles.dm_header}>
-        <Pressable
-          onPress={() => router.back()}
-          style={({ pressed }) => [
-            styles.dm_backButton,
-            pressed && styles.backButtonPressed,
-          ]}
-        >
-          <Text style={styles.dm_backButtonText}>Back</Text>
-        </Pressable>
-
-        <Text style={styles.dm_title}>{otherName}</Text>
-      </View>
-
-      {/* Error message */}
-      {error ? <Text style={styles.dm_error}>{error}</Text> : null}
-
-      {/* Messages */}
-      <FlatList
-        inverted
-        data={messages}
-        keyExtractor={(m) => m.id}
-        contentContainerStyle={styles.dm_listContent}
-        renderItem={({ item }) => {
-          const mine = item.sender_id === userId;
-
-          return (
-            <View
-              style={
-                mine
-                  ? styles.dm_bubbleMine
-                  : styles.dm_bubbleTheirs
-              }
-            >
-              <Text
-                style={
-                  mine
-                    ? styles.dm_bubbleMineText
-                    : styles.dm_bubbleTheirsText
-                }
-              >
-                {item.body}
-              </Text>
-            </View>
-          );
+    <>
+      <Stack.Screen
+        options={{
+          title: otherName,
+          contentStyle: {
+            backgroundColor: colors.background,
+          },
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTintColor: colors.text,
+          headerTitleStyle: {
+            color: colors.text,
+          },
         }}
       />
+      <KeyboardAvoidingView
+        style={styles.dm_screen}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 44 : 0}
+      >
+        {/* Error message */}
+        {error ? <Text style={styles.dm_error}>{error}</Text> : null}
 
-      {/* Message input */}
-      <View style={styles.dm_inputRow}>
-        <TextInput
-          style={styles.dm_input}
-          value={text}
-          onChangeText={setText}
-          placeholder="Message"
-          placeholderTextColor={styles.dm_bubbleTheirsText.color}
+        {/* Messages */}
+        <FlatList
+          inverted
+          data={messages}
+          keyExtractor={(m) => m.id}
+          contentContainerStyle={styles.dm_listContent}
+          renderItem={({ item }) => {
+            const mine = item.sender_id === userId;
+
+            return (
+              <View style={mine ? styles.dm_bubbleMine : styles.dm_bubbleTheirs}>
+                <Text style={mine ? styles.dm_bubbleMineText : styles.dm_bubbleTheirsText}>
+                  {item.body}
+                </Text>
+              </View>
+            );
+          }}
         />
 
-        <Pressable style={styles.dm_sendButton} onPress={send}>
-          <Text style={styles.dm_sendText}>Send</Text>
-        </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+        {/* Message input */}
+        <View style={styles.dm_inputRow}>
+          <TextInput
+            style={styles.dm_input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Message"
+            placeholderTextColor={colors.textMuted}
+          />
+
+          <Pressable style={styles.dm_sendButton} onPress={send}>
+            <Text style={styles.dm_sendText}>Send</Text>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </>
   );
 }
