@@ -108,6 +108,7 @@ export const useStyles = makeStyles((style) => ({
   },
   emailInput: {
     borderColor: style.inputBorder,
+    color: style.text,
     alignSelf: 'center',
     borderWidth: 2,
     borderRadius: 6,

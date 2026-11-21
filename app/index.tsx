@@ -47,6 +47,7 @@ export default function LoginPage() {
               style={style.passwordInput}
               placeholder='Password'
               placeholderTextColor={colors.placeHolderTextColor}
+              
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
