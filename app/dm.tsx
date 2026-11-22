@@ -13,6 +13,7 @@ import type { Profile, Message } from '../src/types';
 import { supabase } from '../src/supabase';
 import { useStyles } from '../src/homepage/styles';
 import { useTheme } from '../src/theme';
+import { Avatar } from '../src/profile/Avatar';
 import { loadCachedMessages, saveCachedMessages, mergeMessages } from '../src/messages/cache';
 
 export default function DM() {
@@ -23,6 +24,7 @@ export default function DM() {
   const [messages, setMessages] = useState<Message[]>([]); // newest first
   const [text, setText] = useState('');
   const [error, setError] = useState('');
+  const [otherAvatar, setOtherAvatar] = useState<string | null>(null);
   const router = useRouter();
   const styles = useStyles();
   const insets = useSafeAreaInsets();
@@ -42,10 +44,11 @@ export default function DM() {
     async function openFromParam() {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, display_name, university_domain')
+        .select('id, display_name, university_domain, avatar_url')
         .eq('id', otherId)
         .single();
       if (error) return setError(error.message);
+      setOtherAvatar(data.avatar_url ?? null);
       openChat(data);
     }
     openFromParam();
@@ -193,22 +196,19 @@ export default function DM() {
   }
 
   // the chat
-  // the chat
   return (
     <>
       <Stack.Screen
         options={{
-          title: otherName,
-          contentStyle: {
-            backgroundColor: colors.background,
-          },
-          headerStyle: {
-            backgroundColor: colors.background,
-          },
-          headerTintColor: colors.text,
-          headerTitleStyle: {
-            color: colors.text,
-          },
+          headerTitle: () => (
+            <Pressable
+              onPress={() => router.push(`/user/${otherId}`)}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
+            >
+              <Avatar uri={otherAvatar} size={32} />
+              <Text style={{ fontSize: 17, fontWeight: '600', color: colors.text }}>{otherName}</Text>
+            </Pressable>
+          ),
         }}
       />
       <KeyboardAvoidingView
@@ -229,10 +229,26 @@ export default function DM() {
             const mine = item.sender_id === userId;
 
             return (
-              <View style={mine ? styles.dm_bubbleMine : styles.dm_bubbleTheirs}>
-                <Text style={mine ? styles.dm_bubbleMineText : styles.dm_bubbleTheirsText}>
-                  {item.body}
-                </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'flex-end',
+                  gap: 6,
+                  alignSelf: mine ? 'flex-end' : 'flex-start',
+                  maxWidth: '80%',
+                }}
+              >
+                {!mine ? <Avatar uri={otherAvatar} size={28} /> : null}
+                <View
+                  style={[
+                    mine ? styles.dm_bubbleMine : styles.dm_bubbleTheirs,
+                    { alignSelf: 'auto', maxWidth: '100%', flexShrink: 1 },
+                  ]}
+                >
+                  <Text style={mine ? styles.dm_bubbleMineText : styles.dm_bubbleTheirsText}>
+                    {item.body}
+                  </Text>
+                </View>
               </View>
             );
           }}
