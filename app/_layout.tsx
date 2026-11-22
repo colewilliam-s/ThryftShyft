@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack, ThemeProvider, DarkTheme, DefaultTheme, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Linking from 'expo-linking';
+import * as SystemUI from 'expo-system-ui';
 import {
   useFonts,
   DMSans_400Regular,
@@ -72,14 +73,24 @@ export default function Layout() {
   );
 }
 
-// const { colors } = useTheme();
 // Sends people to the right place: login when logged out, profile setup when
 // their profile isn't finished, and the app once it is.
 function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { session, profile, initialized, loading } = useSession();
   const segments = useSegments() as string[];
   const router = useRouter();
+  const base = isDark ? DarkTheme : DefaultTheme;
+  const navTheme = {
+    ...base,
+    colors: {
+      ...base.colors,
+      background: colors.background,
+      card: colors.background,   // header and tab surfaces
+      text: colors.text,
+      border: colors.border,
+    },
+  };
 
   const screen = segments[0] ?? 'index';
   const isOpenScreen = OPEN_SCREENS.includes(screen);
@@ -107,6 +118,10 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
     if (target) router.replace(target);
   }, [target, router]);
 
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(colors.background);
+  }, [colors.background]);
+
   if (!fontsReady) return null;
 
   // Cover the app while we check the saved session, wait for the profile,
@@ -116,59 +131,62 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
   return (
     <>
       {initialized ? (
-        <Stack
-          screenOptions={{
-            animation: 'none',
-            headerShown: false,
-            contentStyle: { backgroundColor: colors.background },
-            headerStyle: { backgroundColor: colors.background },
-            headerTintColor: colors.text,                 // back arrow and button text
-            headerTitleStyle: { color: colors.text },
-          }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen
-            name="user/[id]"
-            options={{
-              headerShown: true,
-              title: '',
-              headerBackTitle: 'Back',
-              animation: 'slide_from_right',
+        <ThemeProvider value={ navTheme }>
+          <Stack
+            screenOptions={{
+              animation: 'none',
+              headerShown: false,
+              headerShadowVisible: false,
+              contentStyle: { backgroundColor: colors.background },
               headerStyle: { backgroundColor: colors.background },
-              headerTintColor: colors.text
-            }}
-          />
-          <Stack.Screen
-            name="settings"
-            options={{
-              headerShown: true,
-              title: 'Settings',
-              headerBackTitle: 'Back',
-              animation: 'slide_from_right',
-              headerStyle: { backgroundColor: colors.background },
-              headerTintColor: colors.text,
+              headerTintColor: colors.text,                 // back arrow and button text
               headerTitleStyle: { color: colors.text },
-            }}
-          />
-          <Stack.Screen
-            name="dm"
-            options={{
-              headerShown: true,
-              title: '',
-              headerBackTitle: 'Back',
-              animation: 'slide_from_right',
-              contentStyle: {
-                backgroundColor: colors.background,
-              },
-              headerStyle: {
-                backgroundColor: colors.background,
-              },
-              headerTintColor: colors.text,
-              headerTitleStyle: {
-                color: colors.text,
-              },
-            }}
-          />
-        </Stack>
+            }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen
+              name="user/[id]"
+              options={{
+                headerShown: true,
+                title: '',
+                headerBackTitle: 'Back',
+                animation: 'slide_from_right',
+                headerStyle: { backgroundColor: colors.background },
+                headerTintColor: colors.text
+              }}
+            />
+            <Stack.Screen
+              name="settings"
+              options={{
+                headerShown: true,
+                title: 'Settings',
+                headerBackTitle: 'Back',
+                animation: 'slide_from_right',
+                headerStyle: { backgroundColor: colors.background },
+                headerTintColor: colors.text,
+                headerTitleStyle: { color: colors.text },
+              }}
+            />
+            <Stack.Screen
+              name="dm"
+              options={{
+                headerShown: true,
+                title: '',
+                headerBackTitle: 'Back',
+                animation: 'slide_from_right',
+                contentStyle: {
+                  backgroundColor: colors.background,
+                },
+                headerStyle: {
+                  backgroundColor: colors.background,
+                },
+                headerTintColor: colors.text,
+                headerTitleStyle: {
+                  color: colors.text,
+                },
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
       ) : null}
       {covered ? (
         <View style={[cover.overlay, { backgroundColor: colors.background }]}>
