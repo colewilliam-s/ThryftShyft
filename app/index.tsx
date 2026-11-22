@@ -21,7 +21,7 @@ export default function LoginPage() {
     setShowPassword(!showPassword);
   }
 
-  if (session) return <View style={{ flex: 1, backgroundColor: '#fff'}} />
+  if (session) return <View style={{ flex: 1, backgroundColor: colors.background}} />
 
   return (
     <>
