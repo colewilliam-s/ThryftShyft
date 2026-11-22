@@ -41,14 +41,12 @@
         }
       ],
       [
-        "expo-build-properties",
+        "react-native-google-mobile-ads",
         {
-          "ios": {
-            "enableSceneSupport": true
-          }
+          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
-      ],
-      "react-native-google-mobile-ads"
+      ]
     ]
   }
 }
