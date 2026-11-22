@@ -2,7 +2,7 @@
 //   mode='setup'    -> app/setup-location.tsx, shown once after profile creation
 //   mode='settings' -> the Location section of your settings screen
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import { ActivityIndicator, AppState, Linking, Pressable, ScrollView, View } from 'react-native';
 import * as Location from 'expo-location';
 import { useSession } from '../session/SessionProvider';
@@ -16,6 +16,7 @@ import { fetchMyLocation, fetchCampusSpots, saveMyLocation, clearMyLocation, mar
 type Props = {
   mode: 'setup' | 'settings';
   onDone: () => void;
+  topContent?: ReactNode;
 };
 
 type Place = 'campus' | 'off_campus';
@@ -36,7 +37,7 @@ async function readPermission(): Promise<Perm> {
   return p.canAskAgain ? 'canAsk' : 'blocked';
 }
 
-export function LocationForm({ mode, onDone }: Props) {
+export function LocationForm({ mode, onDone, topContent }: Props) {
   const styles = useStyles();
   const { colors } = useTheme();
   const { session, profile, refreshProfile } = useSession();
@@ -212,6 +213,7 @@ export function LocationForm({ mode, onDone }: Props) {
       contentContainerStyle={styles.formContent}
       keyboardShouldPersistTaps='handled'
     >
+      {topContent}
       {/* Explain to the user how location is used and why */}
       {mode === 'setup' ? (
         <>
