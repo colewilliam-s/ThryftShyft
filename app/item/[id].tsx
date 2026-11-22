@@ -9,6 +9,9 @@ import { supabase } from '../../src/supabase';
 import { label } from '../../src/label';
 import type { Listing } from '../../src/types';
 import { Text, useTheme } from '../../src/theme';
+import { useSession } from '../../src/session/SessionProvider';
+import { reportListing } from '../../src/reports/api';
+import { ReportModal } from '../../src/reports/ReportsModal';
 
 export default function ItemDetail() {
   const { colors } = useTheme();
@@ -16,6 +19,8 @@ export default function ItemDetail() {
   const router = useRouter();
   const [listing, setListing] = useState<Listing | null>(null);
   const [error, setError] = useState('');
+  const { session } = useSession();
+  const [reporting, setReporting] = useState(false);
 
   useEffect(() => {
     supabase
@@ -66,9 +71,19 @@ export default function ItemDetail() {
           {listing.color ? <Text>Color: {listing.color}</Text> : null}
           {listing.description ? <Text>{listing.description}</Text> : null}
           <View style={{ height: 8 }} />
-          <Pressable onPress={() => router.push(`/user/${listing.seller.id}`)}>
-            <Text style={{ textDecorationLine: 'underline' }}>Sold by {label(listing.seller)}</Text>
-          </Pressable>
+          {listing.seller.id !== session?.user.id ? (
+            <Pressable onPress={() => setReporting(true)}>
+              <Text style={{ color: colors.textMuted, textDecorationLine: 'underline' }}>Report this listing</Text>
+            </Pressable>
+          ) : null}
+          <ReportModal
+            visible={reporting}
+            onClose={() => setReporting(false)}
+            onSubmit={async (reason) => {
+              await reportListing(listing.id, reason);
+              router.back();
+            }}
+          />
         </ScrollView>
       ) : null}
     </>

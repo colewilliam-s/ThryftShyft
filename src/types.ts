@@ -72,5 +72,10 @@ export type ProfilePageData = ProfileDetails & {
 
 // Giving the user information about the current listing/profile they are looking at
 export type FeedProfile = Profile & {
+  id: string;
+  display_name: string | null;
+  university_domain: string | null;
+  avatar_url: string | null;
+  profile_names: { first_name: string | null; show_full_name: boolean } | null;
   listings: Pick<Listing, 'id' | 'image_url' | 'status'>[];
 };
