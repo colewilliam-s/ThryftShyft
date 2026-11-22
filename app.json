@@ -47,7 +47,8 @@
             "enableSceneSupport": true
           }
         }
-      ]
+      ],
+      "react-native-google-mobile-ads"
     ]
   }
 }
