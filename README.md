@@ -61,7 +61,11 @@ npx supabase login
 Assuming you're added to the DB at this time, whenever you make a change to it, use this command to push changes to the DB
 <br><br>
 ```
-npx supabase db push
+npx supabase db push --linked
+```
+And then to fetch any files that aren't currently in your local repository
+```
+npx supabase db pull --linked
 ```
 <br><br>
 Whenever you are behind on commits, or you don't have all the necessary supabase migrations (and assuming you are logged in), make sure in the terminal to run
