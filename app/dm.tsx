@@ -18,6 +18,26 @@ import { loadCachedMessages, saveCachedMessages, mergeMessages } from '../src/me
 
 let chatChannelCount = 0;
 
+async function markConversationRead(
+  conversationId: string,
+  userId: string,
+) {
+  const { error } = await supabase
+    .from('conversation_reads')
+    .upsert(
+      {
+        conversation_id: conversationId,
+        user_id: userId,
+        last_read_at: new Date().toISOString(),
+      },
+      { onConflict: 'conversation_id,user_id' },
+    );
+
+  if (error) {
+    console.error('Failed to mark conversation read:', error.message);
+  }
+}
+
 export default function DM() {
   const [userId, setUserId] = useState<string | null>(null);
   const { otherId } = useLocalSearchParams<{ otherId?: string }>();
@@ -40,6 +60,13 @@ export default function DM() {
     });
   }, []);
 
+  // mark conversation as read when opened.
+  useEffect(() => {
+    if (!convId || !userId) return;
+
+    void markConversationRead(convId, userId);
+  }, [convId, userId]);
+
   // open the chat with the person we arrived for
   useEffect(() => {
     if (!otherId) return;
@@ -56,7 +83,6 @@ export default function DM() {
     openFromParam();
   }, [otherId]);
 
-  // load messages and subscribe to new ones when a chat is open
   // load messages and subscribe to new ones when a chat is open
   useEffect(() => {
     if (!convId || !userId) return;
@@ -87,10 +113,15 @@ export default function DM() {
               ? prev
               : [incoming, ...prev],
           );
+
+          // if actively viewing the chat, mark incoming messages as read.
+          if (incoming.sender_id !== currentUserId) {
+            void markConversationRead(currentConvId, currentUserId);
+          }
         },
       );
 
-    // Subscribe only after registering all listeners.
+    // subscribe only after registering all listeners.
     channel.subscribe((status) => {
       if (status === 'CHANNEL_ERROR') {
         if (!cancelled) {
