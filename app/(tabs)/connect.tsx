@@ -7,6 +7,8 @@ import { useSession } from '../../src/session/SessionProvider';
 import { fetchInbox, type InboxItem } from '../../src/messages/api';
 import { styles, useStyles } from '../../src/messages/styles'
 
+let inboxChannelCount = 0;
+
 export default function Connect() {
   const router = useRouter();
   const { session } = useSession();
@@ -41,7 +43,7 @@ export default function Connect() {
   useEffect(() => {
     if (!myId) return;
     const channel = supabase
-      .channel(`inbox:${myId}`)
+      .channel(`inbox:${myId}:${++inboxChannelCount}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
         load();
       })

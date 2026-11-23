@@ -16,6 +16,8 @@ import { useTheme } from '../src/theme';
 import { Avatar } from '../src/profile/Avatar';
 import { loadCachedMessages, saveCachedMessages, mergeMessages } from '../src/messages/cache';
 
+let chatChannelCount = 0;
+
 export default function DM() {
   const [userId, setUserId] = useState<string | null>(null);
   const { otherId } = useLocalSearchParams<{ otherId?: string }>();
@@ -66,7 +68,7 @@ export default function DM() {
     setMessages([]);
 
     const channel = supabase
-      .channel(`dm-${convId}-${userId}`)
+      .channel(`dm-${convId}-${userId}: ${chatChannelCount}`)
       .on(
         'postgres_changes',
         {
